@@ -15,19 +15,26 @@ class DetailActivity : AppCompatActivity() {
         binding = ActivityDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val user = intent.getSerializableExtra("user") as User
+        // Set Toolbar as ActionBar
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
 
-        binding.txtName.text = "${user.firstName} ${user.lastName}"
-        binding.txtEmail.text = "Email: ${user.email}"
-        binding.txtPhone.text = "Phone: ${user.phone}"
-        binding.txtAge.text = "Age: ${user.age}"
+        // Back arrow click
+        binding.toolbar.setNavigationOnClickListener { finish() }
+
+        // Get user data
+        val user = intent.getParcelableExtra<User>("user") ?: return
+
+        binding.tvName.text = "${user.firstName} ${user.lastName}"
+        binding.tvUsername.text = user.username
+        binding.tvEmail.text = user.email
+        binding.tvPhone.text = user.phone
 
         Glide.with(this)
             .load(user.image)
+            .circleCrop()
+            .placeholder(R.drawable.ic_user_placeholder)
             .into(binding.imgUser)
-
-        binding.btnBack.setOnClickListener {
-            finish()
-        }
     }
 }
